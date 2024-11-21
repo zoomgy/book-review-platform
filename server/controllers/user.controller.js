@@ -23,7 +23,7 @@ const registerUser = async (req, res) => {
     });
     const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1d" });
     res.cookie("token", token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: false,
       sameSite: true,
       maxAge: 24 * 60 * 60 * 1000,
@@ -58,7 +58,7 @@ const loginUser = async (req, res) => {
     }
     const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1d" });
     res.cookie("token", token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: false,
       sameSite: true,
       maxAge: 24 * 60 * 60 * 1000,
