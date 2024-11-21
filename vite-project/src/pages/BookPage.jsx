@@ -17,12 +17,15 @@ const BookPage = () => {
   useEffect(() => {
     const fetchBook = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/book/${id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `https://book-review-platform-backend.onrender.com/book/${id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const data = await response.json();
         if (!response.ok) {
           throw new Error(data.message || "Failed to fetch the book");
@@ -31,7 +34,7 @@ const BookPage = () => {
         setLoading(false);
         for (var i = 0; i < data.reviews.length; i++) {
           const usersResponse = await fetch(
-            `http://localhost:3000/${data.reviews[i].userId}`,
+            `https://book-review-platform-backend.onrender.com/${data.reviews[i].userId}`,
             {
               method: "GET",
               headers: {
@@ -64,13 +67,16 @@ const BookPage = () => {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:3000/book/${id}/review`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: user.id, review }),
-      });
+      const response = await fetch(
+        `https://book-review-platform-backend.onrender.com/book/${id}/review`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: user.id, review }),
+        }
+      );
 
       const data = await response.json();
 

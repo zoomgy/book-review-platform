@@ -18,13 +18,16 @@ const Register = () => {
     setSuccess("");
 
     try {
-      const response = await fetch("http://localhost:3000/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://book-review-platform-backend.onrender.com/logout",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
       dispatch(logout());
     } catch (err) {
       setError("Logout unsuccessful.");
@@ -37,14 +40,17 @@ const Register = () => {
     setSuccess("");
 
     try {
-      const response = await fetch("http://localhost:3000/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ name, email, password, isAdmin }),
-      });
+      const response = await fetch(
+        "https://book-review-platform-backend.onrender.com/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ name, email, password, isAdmin }),
+        }
+      );
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message || "Failed to register");

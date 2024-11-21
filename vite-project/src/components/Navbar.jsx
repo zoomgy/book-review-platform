@@ -9,13 +9,16 @@ function Navbar() {
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:3000/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://book-review-platform-backend.onrender.com/logout",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
       dispatch(logout());
     } catch (err) {
       console.log(err);

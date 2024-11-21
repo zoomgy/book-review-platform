@@ -18,21 +18,24 @@ const AddNewBook = () => {
     setSuccess("");
 
     try {
-      const response = await fetch("http://localhost:3000/book", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          userId: user.id,
-          title,
-          author,
-          genre,
-          description,
-          coverImage,
-        }),
-      });
+      const response = await fetch(
+        "https://book-review-platform-backend.onrender.com/book",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            userId: user.id,
+            title,
+            author,
+            genre,
+            description,
+            coverImage,
+          }),
+        }
+      );
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message || "Failed to add book");
