@@ -31,7 +31,7 @@ cd book-review-platform
 Navigate to the backend directory and install dependencies:
 
 ```bash
-cd backend
+cd server
 npm install
 ```
 
@@ -40,7 +40,7 @@ npm install
 Navigate to the frontend directory and install dependencies:
 
 ```bash
-cd frontend
+cd vite-project
 npm install
 ```
 
