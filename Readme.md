@@ -30,15 +30,19 @@ cd book-review-platform
 
 Navigate to the backend directory and install dependencies:
 
+```bash
 cd backend
 npm install
+```
 
 ### 3. Install Frontend Dependencies
 
 Navigate to the frontend directory and install dependencies:
 
+```bash
 cd frontend
 npm install
+```
 
 ### 4. Set Up Environment Variables
 
@@ -51,15 +55,22 @@ JWT_SECRET=your-jwt-secret
 
 Run the backend server:
 
+```bash
 cd backend
 npm start
+```
+
 This will start the server on http://localhost:3000.
 
 ### 6. Start the Frontend
 
 Navigate to the frontend directory and start the React app:
+
+```bash
 cd frontend
 npm start
+```
+
 The React app will run on http://localhost:3001 (or a different port if specified).
 
 API Endpoints
@@ -68,27 +79,31 @@ API Endpoints
 
 Fetches details of a book by its id (including reviews).
 Response:
-json
+
+```json
 {
-"id": "1",
-"title": "Book Title",
-"author": "Author Name",
-"genre": "Genre",
-"description": "Description of the book",
-"reviews": [
-{
-"userId": "user1",
-"review": "Great book!"
+  "id": "1",
+  "title": "Book Title",
+  "author": "Author Name",
+  "genre": "Genre",
+  "description": "Description of the book",
+  "reviews": [
+    {
+      "userId": "user1",
+      "review": "Great book!"
+    }
+  ]
 }
-]
-}
+```
 
 ### 2. POST /book/:id/review
 
 Adds a review for a book.
 Request Body:
-json
+
+```json
 {
-"userId": "user_id",
-"review": "This is my review"
+  "userId": "user_id",
+  "review": "This is my review"
 }
+```
