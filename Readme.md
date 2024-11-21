@@ -71,7 +71,7 @@ cd vite-project
 npm start
 ```
 
-The React app will run on http://localhost:3001 (or a different port if specified).
+The React app will run on http://localhost:5173 (or a different port if specified).
 
 API Endpoints
 
