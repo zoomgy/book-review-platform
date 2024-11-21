@@ -18,7 +18,7 @@ app.use(cookieParser());
 app.use(e.json());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://book-review-platform-frontend.onrender.com",
     credentials: true,
   })
 );
