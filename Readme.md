@@ -56,7 +56,7 @@ JWT_SECRET=your-jwt-secret
 Run the backend server:
 
 ```bash
-cd backend
+cd server
 npm start
 ```
 
@@ -67,7 +67,7 @@ This will start the server on http://localhost:3000.
 Navigate to the frontend directory and start the React app:
 
 ```bash
-cd frontend
+cd vite-project
 npm start
 ```
 
