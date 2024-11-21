@@ -45,14 +45,6 @@ function Navbar() {
               Home
             </Link>
           </li>
-          <li>
-            <Link
-              to="/review"
-              className="hover:underline hover:text-blue-300 transition-colors duration-300"
-            >
-              Review
-            </Link>
-          </li>
           {user && !user.isAuthenticated && (
             <li>
               <Link
