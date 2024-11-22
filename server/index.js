@@ -5,6 +5,8 @@ import userRouter from "./router/user.router.js";
 import bookRouter from "./router/book.router.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+const FRONTEND_URL = "https://book-review-platform-frontend.onrender.com";
+// const FRONTEND_URL = "http://localhost:5173";
 
 async function connectDatabase() {
   await mongoose.connect(
@@ -18,7 +20,7 @@ app.use(cookieParser());
 app.use(e.json());
 app.use(
   cors({
-    origin: "https://book-review-platform-frontend.onrender.com",
+    origin: FRONTEND_URL,
     credentials: true,
   })
 );

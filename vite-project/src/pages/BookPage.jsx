@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import BACKEND_URL from "../Constants.js";
 
 const BookPage = () => {
   const navigate = useNavigate();
@@ -13,46 +14,44 @@ const BookPage = () => {
   const [review, setReview] = useState("");
   const [users, setUsers] = useState({});
   let usersArray = [];
+  const fetchBook = async () => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/book/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to fetch the book");
+      }
+      setBook(data);
+      setLoading(false);
 
-  useEffect(() => {
-    const fetchBook = async () => {
-      try {
-        const response = await fetch(
-          `https://book-review-platform-backend.onrender.com/book/${id}`,
+      const usersArray = {};
+      for (let i = 0; i < data.reviews.length; i++) {
+        const usersResponse = await fetch(
+          `${BACKEND_URL}/${data.reviews[i].userId}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
             },
+            credentials: "include",
           }
         );
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to fetch the book");
-        }
-        setBook(data);
-        setLoading(false);
-        for (var i = 0; i < data.reviews.length; i++) {
-          const usersResponse = await fetch(
-            `https://book-review-platform-backend.onrender.com/${data.reviews[i].userId}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              credentials: "include",
-            }
-          );
-          const usersData = await usersResponse.json();
-          usersArray[usersData.user.id] = usersData.user.name;
-        }
-        setUsers(usersArray);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
+        const usersData = await usersResponse.json();
+        usersArray[usersData.user.id] = usersData.user.name;
       }
-    };
+      setUsers(usersArray);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchBook();
   }, [id]);
 
@@ -67,16 +66,13 @@ const BookPage = () => {
       return;
     }
     try {
-      const response = await fetch(
-        `https://book-review-platform-backend.onrender.com/book/${id}/review`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userId: user.id, review }),
-        }
-      );
+      const response = await fetch(`${BACKEND_URL}/book/${id}/review`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: user.id, review }),
+      });
 
       const data = await response.json();
 
@@ -86,7 +82,8 @@ const BookPage = () => {
 
       setReview("");
       alert("Review submitted successfully!");
-      navigate(`/book/${book._id}`);
+
+      await fetchBook();
     } catch (err) {
       setError(err.message);
     }

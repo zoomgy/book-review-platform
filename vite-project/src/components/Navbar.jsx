@@ -2,6 +2,8 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../userslice";
+import BACKEND_URL from "../Constants.js";
+import { FaUser, FaHome, FaFingerprint, FaSignOutAlt } from "react-icons/fa";
 
 function Navbar() {
   const dispatch = useDispatch();
@@ -9,16 +11,13 @@ function Navbar() {
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(
-        "https://book-review-platform-backend.onrender.com/logout",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${BACKEND_URL}/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
       dispatch(logout());
     } catch (err) {
       console.log(err);
@@ -37,7 +36,8 @@ function Navbar() {
           </Link>
         </div>
         <ul className="flex flex-row gap-6 text-sm md:text-base">
-          <li>
+          <li className="flex items-center justify-center gap-1">
+            <FaHome></FaHome>
             <Link
               to="/"
               className="hover:underline hover:text-blue-300 transition-colors duration-300"
@@ -46,7 +46,8 @@ function Navbar() {
             </Link>
           </li>
           {user && !user.isAuthenticated && (
-            <li>
+            <li className="flex items-center justify-center gap-1">
+              <FaFingerprint></FaFingerprint>
               <Link
                 to="/login"
                 className="hover:underline hover:text-blue-300 transition-colors duration-300"
@@ -55,18 +56,9 @@ function Navbar() {
               </Link>
             </li>
           )}
-          {user && !user.isAuthenticated && (
-            <li>
-              <Link
-                to="/register"
-                className="hover:underline hover:text-blue-300 transition-colors duration-300"
-              >
-                Register
-              </Link>
-            </li>
-          )}
           {user.isAuthenticated && (
-            <li>
+            <li className="flex items-center justify-center gap-1">
+              <FaUser></FaUser>
               <Link
                 to="/profile"
                 className="hover:underline hover:text-blue-300 transition-colors duration-300"
@@ -76,12 +68,15 @@ function Navbar() {
             </li>
           )}
           {user.isAuthenticated && (
-            <button
-              onClick={handleLogout}
-              className="hover:underline text-blue-400 hover:text-blue-300 transition-colors duration-300"
-            >
-              Logout
-            </button>
+            <div className="flex items-center justify-center gap-1">
+              <FaSignOutAlt></FaSignOutAlt>
+              <button
+                onClick={handleLogout}
+                className="hover:underline text-blue-400 hover:text-blue-300 transition-colors duration-300"
+              >
+                Logout
+              </button>
+            </div>
           )}
         </ul>
       </div>

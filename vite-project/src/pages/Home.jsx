@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import BACKEND_URL from "../Constants.js";
 
 const HomePage = () => {
   const [books, setBooks] = useState([]);
@@ -9,16 +10,13 @@ const HomePage = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch(
-          "https://book-review-platform-backend.onrender.com/",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          }
-        );
+        const response = await fetch(`${BACKEND_URL}/`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
         const data = await response.json();
         if (!response.ok) {
           throw new Error(data.message || "Failed to fetch books");

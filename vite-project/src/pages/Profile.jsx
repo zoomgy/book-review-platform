@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "../../userslice.js";
 import { Link } from "react-router-dom";
+import BACKEND_URL from "../Constants.js";
 
 const Profile = () => {
   const { user } = useSelector((state) => state);
@@ -18,16 +19,13 @@ const Profile = () => {
     setSuccess("");
 
     try {
-      const response = await fetch(
-        "https://book-review-platform-backend.onrender.com/logout",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${BACKEND_URL}/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
       dispatch(logout());
     } catch (err) {
       setError("Logout unsuccessful.");
@@ -40,22 +38,19 @@ const Profile = () => {
     setSuccess("");
 
     try {
-      const response = await fetch(
-        `https://book-review-platform-backend.onrender.com/${user.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            name,
-            email,
-            password,
-            isAdmin: isAdmin === "Yes" ? true : false,
-          }),
-        }
-      );
+      const response = await fetch(`${BACKEND_URL}/${user.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          isAdmin: isAdmin === "Yes" ? true : false,
+        }),
+      });
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message || "Failed to register");
@@ -80,7 +75,9 @@ const Profile = () => {
           </h2>
           {error && <div className="mt-4 text-sm text-red-500">{error}</div>}
           {success && (
-            <div className="mt-4 text-sm text-green-500">{success}</div>
+            <div className="mt-4 text-sm text-green-800 font-bold">
+              {success}
+            </div>
           )}
           <form onSubmit={handleSubmit} className="mt-6">
             <div className="mb-4">
@@ -162,7 +159,7 @@ const Profile = () => {
             </div>
             <button
               type="submit"
-              className="w-full px-4 py-2 font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 focus:ring-offset-1"
+              className="w-full px-4 py-2 font-medium text-white bg-green-700 rounded-md hover:bg-green-800 focus:ring-2 focus:ring-blue-400 focus:ring-offset-1"
             >
               Update Account
             </button>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import BACKEND_URL from "../Constants.js";
 
 const AddNewBook = () => {
   const { user } = useSelector((state) => state);
@@ -18,24 +19,21 @@ const AddNewBook = () => {
     setSuccess("");
 
     try {
-      const response = await fetch(
-        "https://book-review-platform-backend.onrender.com/book",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            userId: user.id,
-            title,
-            author,
-            genre,
-            description,
-            coverImage,
-          }),
-        }
-      );
+      const response = await fetch(`${BACKEND_URL}/book`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          userId: user.id,
+          title,
+          author,
+          genre,
+          description,
+          coverImage,
+        }),
+      });
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message || "Failed to add book");

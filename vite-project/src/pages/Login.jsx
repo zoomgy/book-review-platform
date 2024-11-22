@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "../../userslice.js";
 import { Link, useNavigate } from "react-router-dom";
+import BACKEND_URL from "../Constants.js";
 
 const Login = () => {
   const { user } = useSelector((state) => state);
@@ -18,16 +19,13 @@ const Login = () => {
     setSuccess("");
 
     try {
-      const response = await fetch(
-        "https://book-review-platform-backend.onrender.com/logout",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${BACKEND_URL}/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
       dispatch(logout());
     } catch (err) {
       setError("Logout unsuccessful.");
@@ -40,17 +38,14 @@ const Login = () => {
     setSuccess("");
 
     try {
-      const response = await fetch(
-        "https://book-review-platform-backend.onrender.com/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ email, password }),
-        }
-      );
+      const response = await fetch(`${BACKEND_URL}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      });
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message || "Failed to login");
