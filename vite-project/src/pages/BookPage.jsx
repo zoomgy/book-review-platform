@@ -150,7 +150,7 @@ const BookPage = () => {
         return setError("Error Deleting Review");
       }
       alert("Review Deleted successfully!");
-      window.location.reload();
+      navigate("/");
     } catch (error) {
       setError("Error Deleting Review");
       console.log(error);
