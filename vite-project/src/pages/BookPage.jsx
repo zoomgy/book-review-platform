@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import BACKEND_URL from "../Constants.js";
+import { v4 } from "uuid";
 
 const BookPage = () => {
   const navigate = useNavigate();
@@ -13,7 +14,6 @@ const BookPage = () => {
   const [error, setError] = useState("");
   const [review, setReview] = useState("");
   const [users, setUsers] = useState({});
-  let usersArray = [];
   const fetchBook = async () => {
     try {
       const response = await fetch(`${BACKEND_URL}/book/${id}`, {
@@ -107,6 +107,55 @@ const BookPage = () => {
       </div>
     );
   }
+  const handleBookRemoval = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await fetch(`${BACKEND_URL}/book/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          bookAddedBy: book.userId,
+          bookId: id,
+        }),
+      });
+      if (!response.ok) {
+        return setError("Error Deleting Book");
+      }
+      alert("Book Deleted successfully!");
+      navigate("/");
+    } catch (error) {
+      setError("Error Deleting Book");
+      console.log(error);
+    }
+  };
+
+  const handleReviewRemoval = async (reviewId) => {
+    console.log(reviewId);
+    try {
+      const response = await fetch(`${BACKEND_URL}/book/review/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          reviewId,
+          bookId: id,
+        }),
+      });
+      if (!response.ok) {
+        return setError("Error Deleting Review");
+      }
+      alert("Review Deleted successfully!");
+      window.location.reload();
+    } catch (error) {
+      setError("Error Deleting Review");
+      console.log(error);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -120,7 +169,6 @@ const BookPage = () => {
         <h2 className="text-xl text-gray-600 mb-2">by {book.author}</h2>
         <p className="text-gray-500 mb-6">Genre: {book.genre}</p>
         <p className="text-gray-700 leading-7">{book.description}</p>
-
         {/* Review Form - Only visible if user is authenticated */}
         {user.isAuthenticated && (
           <div className="mt-8">
@@ -144,7 +192,6 @@ const BookPage = () => {
             </form>
           </div>
         )}
-
         {/* If the user is not authenticated, display a message */}
         {!user.isAuthenticated && (
           <p className="mt-4 text-gray-600">
@@ -154,18 +201,32 @@ const BookPage = () => {
             </Link>
           </p>
         )}
-
         {/* Display All Reviews Section */}
         <div className="mt-8">
           <h2 className="text-2xl font-semibold mb-4">Reviews</h2>
           <div className="space-y-4">
             {book.reviews && book.reviews.length > 0 ? (
               book.reviews.map((review, index) => (
-                <div key={index} className="border-t pt-4">
-                  <p className="text-lg font-semibold">
-                    {users[review.userId] || "Unknown User"}
-                  </p>
-                  <p className="text-gray-700">{review.review}</p>
+                <div key={index} className="border-t pt-4 flex justify-between">
+                  <div key={v4()}>
+                    <p className="text-lg font-semibold">
+                      {users[review.userId] || "Unknown User"}
+                    </p>
+                    <p className="text-gray-700">{review.review}</p>
+                  </div>
+                  {review.userId === user.id && (
+                    <div key={v4()}>
+                      <button
+                        onClick={(event) => {
+                          event.preventDefault();
+                          handleReviewRemoval(review._id);
+                        }}
+                        className="bg-red-600 pt-1 pb-1 p-2 rounded-sm text-white hover:bg-red-500"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))
             ) : (
@@ -173,6 +234,16 @@ const BookPage = () => {
             )}
           </div>
         </div>
+        {user.isAuthenticated && user.id === book.userId && (
+          <div className="mt-5">
+            <button
+              onClick={handleBookRemoval}
+              className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-500"
+            >
+              Remove This Book
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

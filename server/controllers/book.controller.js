@@ -90,4 +90,56 @@ const submitReview = async (req, res) => {
       .json({ message: "Error submitting review", error: error.message });
   }
 };
-export { addNewBook, getAllBooks, findABook, submitReview };
+const handleReviewDelete = async (req, res) => {
+  try {
+    const { reviewId, bookId } = req.body;
+    const bookForWhichReviewIsToBeDeleted = await Book.findById(bookId);
+    if (!bookForWhichReviewIsToBeDeleted) {
+      return res.status(404).json({ message: "Book not found" });
+    }
+    const updatedReviews = bookForWhichReviewIsToBeDeleted.reviews.filter(
+      (review) => review._id.toString() !== reviewId
+    );
+    bookForWhichReviewIsToBeDeleted.reviews = updatedReviews;
+    await bookForWhichReviewIsToBeDeleted.save();
+    res.status(200).json({
+      message: "Review deleted successfully",
+      book: bookForWhichReviewIsToBeDeleted,
+    });
+  } catch (error) {
+    console.error("Error deleting review:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while deleting the review" });
+  }
+};
+
+const handleBookDelete = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const { bookAddedBy, bookId } = req.body;
+    if (bookAddedBy !== decoded.id) {
+      return res
+        .status(401)
+        .json({ message: "You can only delete book added by you !" });
+    }
+    const bookToDelete = await Book.findByIdAndDelete(bookId);
+    if (!bookToDelete) {
+      return res.status(401).json({ message: "Book Not Found" });
+    }
+    res.status(201).json({ message: "Book Deleted Successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error Deleting Book", error: error.message });
+  }
+};
+export {
+  addNewBook,
+  getAllBooks,
+  findABook,
+  submitReview,
+  handleBookDelete,
+  handleReviewDelete,
+};
